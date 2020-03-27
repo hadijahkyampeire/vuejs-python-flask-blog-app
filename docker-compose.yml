@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+
+  blog-api:
+    container_name: blog-api
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - './server:/usr/src/app'
+    ports:
+      - 5001:5000
+    environment:
+      - FLASK_APP=project/__init__.py
+      - FLASK_ENV=development
+      - APP_SETTINGS=development
+      - DATABASE_URL=postgresql://postgres:postgres@blog-db:5432/blogs
+      - TEST_DATABASE_URL=postgresql://postgres:postgres@blog-db:5432/blogs_testdb
+      - MAIL_USERNAME=hadijahzrecipes@gmail.com
+      - MAIL_PASSWORD=devhadijah315
+      - SECRET_KEY=secret_key@2020#
+    depends_on:
+      - blog-db
+  
+  blog-db:
+    build: 
+      context: ./server/api/blogs/db
+      dockerfile: Dockerfile
+    expose: 
+      - 5432
+    environment: 
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - blog-db:/var/lib/postgresql/data
+
+  # blog-app:
+  #   container_name: blog-app
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - './client:/app'
+  #     - '/app/node_modules'
+  #   ports:
+  #     - '8081:8080'
+
+volumes:
+  blog-db:

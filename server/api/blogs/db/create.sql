@@ -1,0 +1,2 @@
+CREATE DATABASE blogs;
+CREATE DATABASE blogs_testdb
